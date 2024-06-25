@@ -70,7 +70,18 @@ func FetchPuzzle(fileName string) (*Puzzle, error) {
 	}, nil
 }
 
-func runLuaFunction(L *lua.LState, functionName string) (lua.LValue, error)
+func runLuaFunction(L *lua.LState, functionName string) (lua.LValue, error) {
+	if err := L.CallByParam(lua.P{
+		Fn:      L.GetGlobal(functionName),
+		NRet:    1,
+		Protect: true,
+	}); err != nil {
+		return nil, fmt.Errorf("error while calling %s function: %w", functionName, err)
+	}
+	value := L.Get(-1)
+	L.Pop(1)
+	return value, nil
+}
 
 func fetchTitle(L *lua.LState) (string, error)
 

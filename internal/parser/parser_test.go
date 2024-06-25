@@ -13,6 +13,20 @@ import (
 /* BENCHMARKS */
 
 // FetchPuzzle
+func BenchmarkFetchPuzzle(b *testing.B) {
+	file, err := os.CreateTemp("", "bench.lua")
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer file.Close()
+	defer os.Remove(file.Name())
+	if err := writeScriptToFile(file, *NewScript()); err != nil {
+		b.Fatal(err)
+	}
+	for range b.N {
+		FetchPuzzle(file.Name())
+	}
+}
 
 /* UTILS */
 type Script struct {

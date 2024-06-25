@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/yuin/gopher-lua"
@@ -83,10 +84,100 @@ func runLuaFunction(L *lua.LState, functionName string) (lua.LValue, error) {
 	return value, nil
 }
 
-func fetchTitle(L *lua.LState) (string, error)
+func fetchTitle(L *lua.LState) (string, error) {
+	runResult, err := runLuaFunction(L, "GetTitle")
+	if err != nil {
+		return "", err
+	}
+	if title, ok := runResult.(lua.LString); ok { // check whether the value is a string
+		return title.String(), nil
+	}
+	return "", errors.New("cannot process the result of the GetTitle function")
+}
 
-func fetchDescription(L *lua.LState) ([]string, error)
+func fetchDescription(L *lua.LState) ([]string, error) {
+	runResult, err := runLuaFunction(L, "GetDescription")
+	if err != nil {
+		return nil, err
+	}
+	if descTable, ok := runResult.(*lua.LTable); ok { // check whether the value is a lua table
+		desc := make([]string, 0, descTable.Len())
+		descTable.ForEach(func(_, value lua.LValue) {
+			if descLine, ok := value.(lua.LString); ok { // check whether each value is a string
+				desc = append(desc, descLine.String())
+			}
+		})
+		if len(desc) == descTable.Len() { // return array if all values were fetched
+			return desc, nil
+		}
+	}
+	return nil, errors.New("cannot process the result of the GetDescription function")
+}
 
-func fetchStreams(L *lua.LState) ([]Stream, error)
+// TODO: add check for values length and move length to the constants
+func fetchStreams(L *lua.LState) ([]Stream, error) {
+	runResult, err := runLuaFunction(L, "GetStreams")
+	if err != nil {
+		return nil, err
+	}
+	if streamsTable, ok := runResult.(*lua.LTable); ok { // check whether the value is a lua table
+		streams := make([]Stream, 0, streamsTable.Len())
+		streamsTable.ForEach(func(_, value lua.LValue) {
+			if streamTable, ok := value.(*lua.LTable); ok && streamTable.Len() == 4 {
+				typeValue, typeOk := streamTable.RawGetInt(1).(lua.LNumber)          // check whether stream type is a number
+				nameValue, nameOk := streamTable.RawGetInt(2).(lua.LString)          // check whether stream name is a string
+				posValue, posOk := streamTable.RawGetInt(3).(lua.LNumber)            // check whether stream position is a number
+				valuesTable, valuesTableOk := streamTable.RawGetInt(4).(*lua.LTable) // check whether stream values is a lua table
 
-func fetchLayout(L *lua.LState) ([]TileType, error)
+				streamValues := make([]int16, 0, valuesTable.Len())
+				valuesTable.ForEach(func(_, value lua.LValue) {
+					val, ok := value.(lua.LNumber) // check wether each stream value is a number
+					valuesTableOk = valuesTableOk && ok
+					if ok && -999 <= val &&
+						val <= 999 { // TODO: move numbers to constants and replace comment
+						streamValues = append(streamValues, int16(val))
+					}
+				})
+
+				// if everything ok with streams table format return it
+				if typeOk && nameOk && posOk && valuesTableOk &&
+					len(
+						streamValues,
+					) == valuesTable.Len() && 0 <= typeValue && typeValue <= 2 && 0 <= posValue && posValue <= 3 { // TODO: move numbers to constants
+					streams = append(streams, Stream{
+						Type:     StreamType(typeValue),
+						Name:     nameValue.String(),
+						Position: uint8(posValue),
+						Values:   streamValues,
+					})
+				}
+			}
+		})
+		if len(streams) == streamsTable.Len() {
+			return streams, nil
+		}
+	}
+	return nil, errors.New("cannot process the result of the GetStreams function")
+}
+
+func fetchLayout(L *lua.LState) ([]TileType, error) {
+	runResult, err := runLuaFunction(L, "GetLayout")
+	if err != nil {
+		return nil, err
+	}
+	if layoutTable, ok := runResult.(*lua.LTable); ok &&
+		layoutTable.Len() == 12 { // TODO: move numbers to constants
+		layout := make([]TileType, 0, layoutTable.Len())
+		layoutTable.ForEach(func(_, value lua.LValue) {
+			if tileType, ok := value.(lua.LNumber); ok {
+				if 0 <= tileType && tileType <= 2 { // TODO: move numbers to constants
+					layout = append(layout, TileType(tileType))
+				}
+			}
+		})
+		if len(layout) == layoutTable.Len() { // return array if all values were fetched
+			return layout, nil
+		}
+	}
+	return nil, errors.New("cannot process the result of the GetLayout function")
+}

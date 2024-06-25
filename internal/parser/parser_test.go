@@ -9,6 +9,239 @@ import (
 /* TESTS */
 
 // FetchPuzzle
+// TODO: add comparison with Puzzle struct
+func TestFetchPuzzleWithCorrectScript(t *testing.T) {
+	file, err := Setup(t, *NewScript(), "test_fetch_puzzle_with_correct_script.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	puzzle, err := FetchPuzzle(file.Name())
+	if err != nil {
+		t.Error("expected error")
+	}
+	_ = puzzle
+}
+
+func TestFetchPuzzleWithWrongTitle(t *testing.T) {
+	script := NewScript()
+	script.GetTitle = []string{"function GetTitle()", "return {}", "end"}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_title.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongDescription(t *testing.T) {
+	script := NewScript()
+	script.GetDescription = []string{"function GetDescription()", "return { {} }", "end"}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_description.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongStreamTableLength(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { 1, \"1\", 1 } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_table_length.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongStreamType(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { {}, \"1\", 1, {} } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_type.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongStreamTypeValue(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { 5, \"1\", 1, {} } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_type_value.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongNameType(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { 1, {}, 1, {} } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_name_type.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongStreamPositionType(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { 1, \"1\", \"1\", {} } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_position_type.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongStreamPositionValue(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { 1, \"1\", 5, {} } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_position_value.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongStreamValuesType(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { 1, \"1\", 1, { \"1\", \"2\" } } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_values_type.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongStreamValues(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { 1, \"1\", 1, { 500000, 2 } } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_values.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+// TODO: func TestFetchPuzzleWithWrongStreamValuesLength(t *testing.T)
+
+func TestFetchPuzzleWithWrongLayoutType(t *testing.T) {
+	script := NewScript()
+	script.GetLayout = []string{
+		"function GetLayout()",
+		"return { \"1\", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_layout_type.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongLayoutLength(t *testing.T) {
+	script := NewScript()
+	script.GetLayout = []string{
+		"function GetLayout()",
+		"return { 1, 1, 1, 1, 1, 1, 1, 1, 1 }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_layout_lenght.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+func TestFetchPuzzleWithWrongLayoutValues(t *testing.T) {
+	script := NewScript()
+	script.GetLayout = []string{
+		"function GetLayout()",
+		"return { 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_layout_values.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
+
+// getTitle -> covered in previous tests
+// getDescription -> covered in previous tests
+// getStreams -> covered in previous tests
+// getLayout -> covered in previous tests
 
 /* BENCHMARKS */
 

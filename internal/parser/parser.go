@@ -5,26 +5,12 @@ import (
 	"fmt"
 
 	"github.com/yuin/gopher-lua"
-)
 
-// TODO: move const and type to constants
-type (
-	StreamType uint8
-	TileType   uint8
-)
-
-const (
-	INPUT StreamType = iota
-	OUTPUT
-)
-
-const (
-	COMPUTE TileType = iota
-	DAMAGED
+	"github.com/FranChesK0/tis-100/internal/types"
 )
 
 type Stream struct {
-	Type     StreamType
+	Type     types.StreamType
 	Name     string
 	Position uint8
 	Values   []int16
@@ -34,7 +20,7 @@ type Puzzle struct {
 	Title       string
 	Description []string
 	Streams     []Stream
-	Layout      []TileType
+	Layout      []types.TileType
 }
 
 // TODO: use goroutines to call all fetch functions
@@ -134,7 +120,7 @@ func fetchStreams(L *lua.LState) ([]Stream, error) {
 						val, ok := value.(lua.LNumber) // check wether each stream value is a number
 						valuesTableOk = valuesTableOk && ok
 						if ok && -999 <= val &&
-							val <= 999 { // TODO: move numbers to constants and replace comment
+							val <= 999 { // TODO: move numbers to types and replace comment
 							streamValues = append(streamValues, int16(val))
 						}
 					})
@@ -144,9 +130,9 @@ func fetchStreams(L *lua.LState) ([]Stream, error) {
 				if typeOk && nameOk && posOk && valuesTableOk &&
 					len(
 						streamValues,
-					) == valuesTable.Len() && 0 <= typeValue && typeValue <= 2 && 0 <= posValue && posValue <= 3 { // TODO: move numbers to constants
+					) == valuesTable.Len() && 0 <= typeValue && typeValue <= 2 && 0 <= posValue && posValue <= 3 { // TODO: move numbers to types
 					streams = append(streams, Stream{
-						Type:     StreamType(typeValue),
+						Type:     types.StreamType(typeValue),
 						Name:     nameValue.String(),
 						Position: uint8(posValue),
 						Values:   streamValues,
@@ -161,18 +147,18 @@ func fetchStreams(L *lua.LState) ([]Stream, error) {
 	return nil, errors.New("cannot process the result of the GetStreams function")
 }
 
-func fetchLayout(L *lua.LState) ([]TileType, error) {
+func fetchLayout(L *lua.LState) ([]types.TileType, error) {
 	runResult, err := runLuaFunction(L, "GetLayout")
 	if err != nil {
 		return nil, err
 	}
 	if layoutTable, ok := runResult.(*lua.LTable); ok &&
-		layoutTable.Len() == 12 { // TODO: move numbers to constants
-		layout := make([]TileType, 0, layoutTable.Len())
+		layoutTable.Len() == 12 { // TODO: move numbers to types
+		layout := make([]types.TileType, 0, layoutTable.Len())
 		layoutTable.ForEach(func(_, value lua.LValue) {
 			if tileType, ok := value.(lua.LNumber); ok {
-				if 0 <= tileType && tileType <= 2 { // TODO: move numbers to constants
-					layout = append(layout, TileType(tileType))
+				if 0 <= tileType && tileType <= 2 { // TODO: move numbers to types
+					layout = append(layout, types.TileType(tileType))
 				}
 			}
 		})

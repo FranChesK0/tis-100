@@ -114,7 +114,6 @@ func fetchDescription(L *lua.LState) ([]string, error) {
 	return nil, errors.New("cannot process the result of the GetDescription function")
 }
 
-// TODO: add check for values length and move length to the constants
 func fetchStreams(L *lua.LState) ([]Stream, error) {
 	runResult, err := runLuaFunction(L, "GetStreams")
 	if err != nil {
@@ -130,14 +129,16 @@ func fetchStreams(L *lua.LState) ([]Stream, error) {
 				valuesTable, valuesTableOk := streamTable.RawGetInt(4).(*lua.LTable) // check whether stream values is a lua table
 
 				streamValues := make([]int16, 0, valuesTable.Len())
-				valuesTable.ForEach(func(_, value lua.LValue) {
-					val, ok := value.(lua.LNumber) // check wether each stream value is a number
-					valuesTableOk = valuesTableOk && ok
-					if ok && -999 <= val &&
-						val <= 999 { // TODO: move numbers to constants and replace comment
-						streamValues = append(streamValues, int16(val))
-					}
-				})
+				if valuesTable.Len() <= 30 { // check stream values length
+					valuesTable.ForEach(func(_, value lua.LValue) {
+						val, ok := value.(lua.LNumber) // check wether each stream value is a number
+						valuesTableOk = valuesTableOk && ok
+						if ok && -999 <= val &&
+							val <= 999 { // TODO: move numbers to constants and replace comment
+							streamValues = append(streamValues, int16(val))
+						}
+					})
+				}
 
 				// if everything ok with streams table format return it
 				if typeOk && nameOk && posOk && valuesTableOk &&

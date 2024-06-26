@@ -238,10 +238,11 @@ func TestFetchPuzzleWithWrongLayoutValues(t *testing.T) {
 	}
 }
 
-// getTitle -> covered in previous tests
-// getDescription -> covered in previous tests
-// getStreams -> covered in previous tests
-// getLayout -> covered in previous tests
+// runLuaFunction -> covered in previous tests
+// fetchTitle -> covered in previous tests
+// fetchgetDescription -> covered in previous tests
+// fetchgetStreams -> covered in previous tests
+// fetchgetLayout -> covered in previous tests
 
 /* BENCHMARKS */
 

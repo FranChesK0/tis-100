@@ -10,47 +10,33 @@ import (
 	"github.com/FranChesK0/tis-100/internal/types"
 )
 
-type Stream struct {
-	Type     types.StreamType
-	Name     string
-	Position uint8
-	Values   []int16
-}
-
-type Puzzle struct {
-	Title       string
-	Description []string
-	Streams     []Stream
-	Layout      []types.NodeType
-}
-
 // TODO: use goroutines to call all fetch functions
 // TODO: refactor FetchPuzzle function
-func FetchPuzzle(fileName string) (*Puzzle, error) {
+func FetchPuzzle(fileName string) (*types.Puzzle, error) {
 	L := lua.NewState()
 	defer L.Close()
 	if err := L.DoFile(fileName); err != nil {
-		return &Puzzle{}, fmt.Errorf("unable to load lua script %s: %w", fileName, err)
+		return &types.Puzzle{}, fmt.Errorf("unable to load lua script %s: %w", fileName, err)
 	}
 
 	title, err := fetchTitle(L)
 	if err != nil {
-		return &Puzzle{}, err
+		return &types.Puzzle{}, err
 	}
 	description, err := fetchDescription(L)
 	if err != nil {
-		return &Puzzle{}, err
+		return &types.Puzzle{}, err
 	}
 	streams, err := fetchStreams(L)
 	if err != nil {
-		return &Puzzle{}, err
+		return &types.Puzzle{}, err
 	}
 	layout, err := fetchLayout(L)
 	if err != nil {
-		return &Puzzle{}, err
+		return &types.Puzzle{}, err
 	}
 
-	return &Puzzle{
+	return &types.Puzzle{
 		Title:       title,
 		Description: description,
 		Streams:     streams,
@@ -101,13 +87,13 @@ func fetchDescription(L *lua.LState) ([]string, error) {
 	return nil, errors.New("cannot process the result of the GetDescription function")
 }
 
-func fetchStreams(L *lua.LState) ([]Stream, error) {
+func fetchStreams(L *lua.LState) ([]types.Stream, error) {
 	runResult, err := runLuaFunction(L, "GetStreams")
 	if err != nil {
 		return nil, err
 	}
 	if streamsTable, ok := runResult.(*lua.LTable); ok { // check whether the value is a lua table
-		streams := make([]Stream, 0, streamsTable.Len())
+		streams := make([]types.Stream, 0, streamsTable.Len())
 		streamsTable.ForEach(func(_, value lua.LValue) {
 			if streamTable, ok := value.(*lua.LTable); ok && streamTable.Len() == 4 {
 				typeValue, typeOk := streamTable.RawGetInt(1).(lua.LNumber)          // check whether stream type is a number
@@ -132,7 +118,7 @@ func fetchStreams(L *lua.LState) ([]Stream, error) {
 					len(streamValues) == valuesTable.Len() &&
 					0 <= typeValue && typeValue < constants.StreamTypesNumber &&
 					0 <= posValue && posValue < constants.IOPositionsNumber {
-					streams = append(streams, Stream{
+					streams = append(streams, types.Stream{
 						Type:     types.StreamType(typeValue),
 						Name:     nameValue.String(),
 						Position: uint8(posValue),

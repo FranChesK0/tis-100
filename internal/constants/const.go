@@ -2,16 +2,6 @@ package constants
 
 import "github.com/FranChesK0/tis-100/internal/types"
 
-const (
-	INPUT types.StreamType = iota
-	OUTPUT
-)
-
-const (
-	COMPUTE types.TileType = iota
-	DAMAGED
-)
-
 /* PROGRAM CONSTANTS */
 const (
 	MaxACC                = 999
@@ -21,4 +11,15 @@ const (
 	MaxStreamValuesLength = 30
 	NodesNumber           = 12
 	NodeTypesNumber       = 2
+)
+
+/* ENUMS */
+const (
+	INPUT types.StreamType = iota
+	OUTPUT
+)
+
+const (
+	COMPUTE types.TileType = iota
+	DAMAGED
 )

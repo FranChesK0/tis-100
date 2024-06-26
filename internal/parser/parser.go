@@ -21,7 +21,7 @@ type Puzzle struct {
 	Title       string
 	Description []string
 	Streams     []Stream
-	Layout      []types.TileType
+	Layout      []types.NodeType
 }
 
 // TODO: use goroutines to call all fetch functions
@@ -148,18 +148,18 @@ func fetchStreams(L *lua.LState) ([]Stream, error) {
 	return nil, errors.New("cannot process the result of the GetStreams function")
 }
 
-func fetchLayout(L *lua.LState) ([]types.TileType, error) {
+func fetchLayout(L *lua.LState) ([]types.NodeType, error) {
 	runResult, err := runLuaFunction(L, "GetLayout")
 	if err != nil {
 		return nil, err
 	}
 	if layoutTable, ok := runResult.(*lua.LTable); ok &&
 		layoutTable.Len() == constants.NodesNumber {
-		layout := make([]types.TileType, 0, layoutTable.Len())
+		layout := make([]types.NodeType, 0, layoutTable.Len())
 		layoutTable.ForEach(func(_, value lua.LValue) {
 			if tileType, ok := value.(lua.LNumber); ok {
 				if 0 <= tileType && tileType < constants.NodeTypesNumber {
-					layout = append(layout, types.TileType(tileType))
+					layout = append(layout, types.NodeType(tileType))
 				}
 			}
 		})

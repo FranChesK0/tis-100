@@ -20,6 +20,6 @@ const (
 )
 
 const (
-	COMPUTE types.TileType = iota
+	COMPUTE types.NodeType = iota
 	DAMAGED
 )

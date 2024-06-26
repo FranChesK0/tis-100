@@ -6,6 +6,7 @@ import (
 
 	"github.com/yuin/gopher-lua"
 
+	"github.com/FranChesK0/tis-100/internal/constants"
 	"github.com/FranChesK0/tis-100/internal/types"
 )
 
@@ -115,12 +116,12 @@ func fetchStreams(L *lua.LState) ([]Stream, error) {
 				valuesTable, valuesTableOk := streamTable.RawGetInt(4).(*lua.LTable) // check whether stream values is a lua table
 
 				streamValues := make([]int16, 0, valuesTable.Len())
-				if valuesTable.Len() <= 30 { // check stream values length
+				if valuesTable.Len() <= constants.MaxStreamValuesLength { // check stream values length
 					valuesTable.ForEach(func(_, value lua.LValue) {
 						val, ok := value.(lua.LNumber) // check wether each stream value is a number
 						valuesTableOk = valuesTableOk && ok
-						if ok && -999 <= val &&
-							val <= 999 { // TODO: move numbers to types and replace comment
+						if ok && constants.MinACC <= val &&
+							val <= constants.MaxACC {
 							streamValues = append(streamValues, int16(val))
 						}
 					})
@@ -128,9 +129,9 @@ func fetchStreams(L *lua.LState) ([]Stream, error) {
 
 				// if everything ok with streams table format return it
 				if typeOk && nameOk && posOk && valuesTableOk &&
-					len(
-						streamValues,
-					) == valuesTable.Len() && 0 <= typeValue && typeValue <= 2 && 0 <= posValue && posValue <= 3 { // TODO: move numbers to types
+					len(streamValues) == valuesTable.Len() &&
+					0 <= typeValue && typeValue < constants.StreamTypesNumber &&
+					0 <= posValue && posValue < constants.IOPositionsNumber {
 					streams = append(streams, Stream{
 						Type:     types.StreamType(typeValue),
 						Name:     nameValue.String(),
@@ -153,11 +154,11 @@ func fetchLayout(L *lua.LState) ([]types.TileType, error) {
 		return nil, err
 	}
 	if layoutTable, ok := runResult.(*lua.LTable); ok &&
-		layoutTable.Len() == 12 { // TODO: move numbers to types
+		layoutTable.Len() == constants.NodesNumber {
 		layout := make([]types.TileType, 0, layoutTable.Len())
 		layoutTable.ForEach(func(_, value lua.LValue) {
 			if tileType, ok := value.(lua.LNumber); ok {
-				if 0 <= tileType && tileType <= 2 { // TODO: move numbers to types
+				if 0 <= tileType && tileType < constants.NodeTypesNumber {
 					layout = append(layout, types.TileType(tileType))
 				}
 			}

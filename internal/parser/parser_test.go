@@ -185,7 +185,22 @@ func TestFetchPuzzleWithWrongStreamValues(t *testing.T) {
 	}
 }
 
-// TODO: func TestFetchPuzzleWithWrongStreamValuesLength(t *testing.T)
+func TestFetchPuzzleWithWrongStreamValuesLength(t *testing.T) {
+	script := NewScript()
+	script.GetStreams = []string{
+		"function GetStreams()",
+		"return { { 1, \"1\", 1, { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 } } }",
+		"end",
+	}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_values_length.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := FetchPuzzle(file.Name()); err == nil {
+		t.Error("expected to occure error")
+	}
+}
 
 func TestFetchPuzzleWithWrongLayoutType(t *testing.T) {
 	script := NewScript()

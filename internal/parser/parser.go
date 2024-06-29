@@ -62,10 +62,11 @@ func fetchTitle(L *lua.LState) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if title, ok := runResult.(lua.LString); ok { // check whether the value is a string
-		return title.String(), nil
+	title, ok := runResult.(lua.LString)
+	if !ok {
+		return "", errors.New("title is not a string")
 	}
-	return "", errors.New("cannot process the result of the GetTitle function")
+	return title.String(), nil
 }
 
 func fetchDescription(L *lua.LState) ([]string, error) {
@@ -73,18 +74,28 @@ func fetchDescription(L *lua.LState) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	if descTable, ok := runResult.(*lua.LTable); ok { // check whether the value is a lua table
-		desc := make([]string, 0, descTable.Len())
-		descTable.ForEach(func(_, value lua.LValue) {
-			if descLine, ok := value.(lua.LString); ok { // check whether each value is a string
-				desc = append(desc, descLine.String())
-			}
-		})
-		if len(desc) == descTable.Len() { // return array if all values were fetched
-			return desc, nil
-		}
+	descTable, ok := runResult.(*lua.LTable)
+	if !ok {
+		return nil, errors.New("description is not an array")
 	}
-	return nil, errors.New("cannot process the result of the GetDescription function")
+
+	desc := make([]string, 0, descTable.Len())
+	descTable.ForEach(func(_, value lua.LValue) {
+		if err != nil {
+			return
+		}
+		descLine, ok := value.(lua.LString)
+		if !ok {
+			err = errors.New("description line is not a string")
+			return
+		}
+		desc = append(desc, descLine.String())
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return desc, nil
 }
 
 func fetchStreams(L *lua.LState) ([]types.Stream, error) {
@@ -92,46 +103,88 @@ func fetchStreams(L *lua.LState) ([]types.Stream, error) {
 	if err != nil {
 		return nil, err
 	}
-	if streamsTable, ok := runResult.(*lua.LTable); ok { // check whether the value is a lua table
-		streams := make([]types.Stream, 0, streamsTable.Len())
-		streamsTable.ForEach(func(_, value lua.LValue) {
-			if streamTable, ok := value.(*lua.LTable); ok && streamTable.Len() == 4 {
-				typeValue, typeOk := streamTable.RawGetInt(1).(lua.LNumber)          // check whether stream type is a number
-				nameValue, nameOk := streamTable.RawGetInt(2).(lua.LString)          // check whether stream name is a string
-				posValue, posOk := streamTable.RawGetInt(3).(lua.LNumber)            // check whether stream position is a number
-				valuesTable, valuesTableOk := streamTable.RawGetInt(4).(*lua.LTable) // check whether stream values is a lua table
-
-				streamValues := make([]int16, 0, valuesTable.Len())
-				if valuesTable.Len() <= constants.MaxStreamValuesLength { // check stream values length
-					valuesTable.ForEach(func(_, value lua.LValue) {
-						val, ok := value.(lua.LNumber) // check wether each stream value is a number
-						valuesTableOk = valuesTableOk && ok
-						if ok && constants.MinACC <= val &&
-							val <= constants.MaxACC {
-							streamValues = append(streamValues, int16(val))
-						}
-					})
-				}
-
-				// if everything ok with streams table format return it
-				if typeOk && nameOk && posOk && valuesTableOk &&
-					len(streamValues) == valuesTable.Len() &&
-					0 <= typeValue && typeValue < constants.StreamTypesNumber &&
-					0 <= posValue && posValue < constants.IOPositionsNumber {
-					streams = append(streams, types.Stream{
-						Type:     types.StreamType(typeValue),
-						Name:     nameValue.String(),
-						Position: uint8(posValue),
-						Values:   streamValues,
-					})
-				}
-			}
-		})
-		if len(streams) == streamsTable.Len() {
-			return streams, nil
-		}
+	streamsTable, ok := runResult.(*lua.LTable)
+	if !ok {
+		return nil, errors.New("streams is not an array")
 	}
-	return nil, errors.New("cannot process the result of the GetStreams function")
+
+	streams := make([]types.Stream, 0, streamsTable.Len())
+	streamsTable.ForEach(func(_, value lua.LValue) {
+		if err != nil {
+			return
+		}
+		streamTable, ok := value.(*lua.LTable)
+		if !ok {
+			err = errors.New("stream is not an array")
+			return
+		}
+		if streamTable.Len() != 4 {
+			err = fmt.Errorf("wrong stream arguments number: expected 4, got %d", streamTable.Len())
+			return
+		}
+
+		typeValue, ok := streamTable.RawGetInt(1).(lua.LNumber)
+		if !ok || typeValue < 0 || typeValue >= constants.StreamTypesNumber {
+			err = errors.New("first value of stream is not a StreamType value")
+			return
+		}
+		nameValue, ok := streamTable.RawGetInt(2).(lua.LString)
+		if !ok {
+			err = errors.New("second value of stream is not a string: %s")
+			return
+		}
+		posValue, ok := streamTable.RawGetInt(3).(lua.LNumber)
+		if !ok {
+			err = errors.New("third value of stream is not a number")
+			return
+		}
+		if posValue < 0 || posValue >= constants.IOPositionsNumber {
+			err = errors.New("position is not in range from 0 to 3")
+			return
+		}
+		valuesTable, ok := streamTable.RawGetInt(4).(*lua.LTable)
+		if !ok {
+			err = errors.New("fourth value of stream is not an array")
+			return
+		}
+		if valuesTable.Len() > constants.MaxStreamValuesLength {
+			err = fmt.Errorf(
+				"wrong stream values number: expected <=%d, got %d",
+				constants.MaxStreamValuesLength,
+				valuesTable.Len(),
+			)
+			return
+		}
+
+		streamValues := make([]int16, 0, valuesTable.Len())
+		valuesTable.ForEach(func(_, value lua.LValue) {
+			if err != nil {
+				return
+			}
+			val, ok := value.(lua.LNumber)
+			if !ok {
+				err = errors.New("stream value is not a number")
+				return
+			}
+			if val < constants.MinACC || val > constants.MaxACC {
+				err = errors.New("stream value is not in range from -999 to 999")
+				return
+			}
+			streamValues = append(streamValues, int16(val))
+		})
+
+		streams = append(streams, types.Stream{
+			Type:     types.StreamType(typeValue),
+			Name:     nameValue.String(),
+			Position: uint8(posValue),
+			Values:   streamValues,
+		})
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return streams, nil
 }
 
 func fetchLayout(L *lua.LState) ([]types.NodeType, error) {
@@ -139,19 +192,37 @@ func fetchLayout(L *lua.LState) ([]types.NodeType, error) {
 	if err != nil {
 		return nil, err
 	}
-	if layoutTable, ok := runResult.(*lua.LTable); ok &&
-		layoutTable.Len() == constants.NodesNumber {
-		layout := make([]types.NodeType, 0, layoutTable.Len())
-		layoutTable.ForEach(func(_, value lua.LValue) {
-			if tileType, ok := value.(lua.LNumber); ok {
-				if 0 <= tileType && tileType < constants.NodeTypesNumber {
-					layout = append(layout, types.NodeType(tileType))
-				}
-			}
-		})
-		if len(layout) == layoutTable.Len() { // return array if all values were fetched
-			return layout, nil
-		}
+	layoutTable, ok := runResult.(*lua.LTable)
+	if !ok {
+		return nil, errors.New("layout is not an array")
 	}
-	return nil, errors.New("cannot process the result of the GetLayout function")
+	if layoutTable.Len() != constants.NodesNumber {
+		return nil, fmt.Errorf(
+			"wrong nodes number: expected %d, got %d",
+			constants.NodesNumber,
+			layoutTable.Len(),
+		)
+	}
+
+	layout := make([]types.NodeType, 0, layoutTable.Len())
+	layoutTable.ForEach(func(_, value lua.LValue) {
+		if err != nil {
+			return
+		}
+		nodeType, ok := value.(lua.LNumber)
+		if !ok {
+			err = errors.New("value of layout is not a NodeType value")
+			return
+		}
+		if nodeType < 0 || nodeType >= constants.NodeTypesNumber {
+			err = errors.New("value of layout is not a NodeType value")
+			return
+		}
+		layout = append(layout, types.NodeType(nodeType))
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return layout, nil
 }

@@ -3,13 +3,16 @@ package parser
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"testing"
+
+	"github.com/FranChesK0/tis-100/internal/constants"
+	"github.com/FranChesK0/tis-100/internal/types"
 )
 
 /* TESTS */
 
 // FetchPuzzle
-// TODO: add comparison with Puzzle struct
 func TestFetchPuzzleWithCorrectScript(t *testing.T) {
 	file, err := Setup(t, *NewScript(), "test_fetch_puzzle_with_correct_script.lua")
 	if err != nil {
@@ -18,9 +21,45 @@ func TestFetchPuzzleWithCorrectScript(t *testing.T) {
 
 	puzzle, err := FetchPuzzle(file.Name())
 	if err != nil {
-		t.Error("expected error")
+		t.Error("unexpected error")
 	}
-	_ = puzzle
+
+	expectedPuzzle := types.Puzzle{
+		Title:       "TEST",
+		Description: []string{"TEST LINE 1", "TEST LINE 2"},
+		Streams: []types.Stream{
+			{
+				Type:     constants.INPUT,
+				Name:     "IN.A",
+				Position: 0,
+				Values:   []int16{1, 2, 3},
+			},
+			{
+				Type:     constants.OUTPUT,
+				Name:     "OUT.A",
+				Position: 0,
+				Values:   []int16{1, 2, 3},
+			},
+		},
+		Layout: []types.NodeType{
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+			constants.COMPUTE,
+		},
+	}
+
+	if !reflect.DeepEqual(*puzzle, expectedPuzzle) {
+		t.Error("puzzle is not equal expected result")
+	}
 }
 
 func TestFetchPuzzleWithWrongTitle(t *testing.T) {

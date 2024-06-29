@@ -255,14 +255,14 @@ func TestFetchPuzzleWithWrongStreamTypeValue(t *testing.T) {
 	}
 }
 
-func TestFetchPuzzleWithWrongNameType(t *testing.T) {
+func TestFetchPuzzleWithWrongStreamNameType(t *testing.T) {
 	script := NewScript()
 	script.GetStreams = []string{
 		"function GetStreams()",
 		"return { { 0, {}, 0, { 1, 2 } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_name_type.lua")
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_name_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}

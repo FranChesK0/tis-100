@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/FranChesK0/tis-100/internal/constants"
@@ -59,6 +60,42 @@ func TestFetchPuzzleWithCorrectScript(t *testing.T) {
 
 	if !reflect.DeepEqual(*puzzle, expectedPuzzle) {
 		t.Error("puzzle is not equal expected result")
+	}
+}
+
+func TestFetchPuzzleWithWrongScrip(t *testing.T) {
+	script := NewScript()
+	script.GetTitle = []string{"func GetTitle()", "return", ";"}
+	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_script.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = FetchPuzzle(file.Name())
+	if err == nil {
+		t.Error("expected to occure error")
+	}
+	expectedErr := "unable to load lua script"
+	if !strings.Contains(err.Error(), expectedErr) {
+		t.Errorf("wrong error occured. expected: %s, got: %s", expectedErr, err.Error())
+	}
+}
+
+func TestFetchPuzzleWithoutFunction(t *testing.T) {
+	script := NewScript()
+	script.GetTitle = []string{""}
+	file, err := Setup(t, *script, "test_fetch_puzzle_without_function.lua")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = FetchPuzzle(file.Name())
+	if err == nil {
+		t.Error("expected to occure error")
+	}
+	expectedErr := "error while calling GetTitle function:"
+	if !strings.Contains(err.Error(), expectedErr) {
+		t.Errorf("wrong error occured. expected: %s, got: %s", expectedErr, err.Error())
 	}
 }
 

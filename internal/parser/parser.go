@@ -130,7 +130,7 @@ func fetchStreams(L *lua.LState) ([]types.Stream, error) {
 		}
 		nameValue, ok := streamTable.RawGetInt(2).(lua.LString)
 		if !ok {
-			err = errors.New("second value of stream is not a string: %s")
+			err = errors.New("second value of stream is not a string")
 			return
 		}
 		posValue, ok := streamTable.RawGetInt(3).(lua.LNumber)

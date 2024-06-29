@@ -139,7 +139,7 @@ func fetchStreams(L *lua.LState) ([]types.Stream, error) {
 			return
 		}
 		if posValue < 0 || posValue >= constants.IOPositionsNumber {
-			err = errors.New("position is not in range from 0 to 3")
+			err = fmt.Errorf("position is not in range from 0 to %d", constants.IOPositionsNumber-1)
 			return
 		}
 		valuesTable, ok := streamTable.RawGetInt(4).(*lua.LTable)
@@ -167,7 +167,11 @@ func fetchStreams(L *lua.LState) ([]types.Stream, error) {
 				return
 			}
 			if val < constants.MinACC || val > constants.MaxACC {
-				err = errors.New("stream value is not in range from -999 to 999")
+				err = fmt.Errorf(
+					"stream value is not in range from %d to %d",
+					constants.MinACC,
+					constants.MaxACC,
+				)
 				return
 			}
 			streamValues = append(streamValues, int16(val))
@@ -211,11 +215,11 @@ func fetchLayout(L *lua.LState) ([]types.NodeType, error) {
 		}
 		nodeType, ok := value.(lua.LNumber)
 		if !ok {
-			err = errors.New("value of layout is not a NodeType value")
+			err = errors.New("layout value is not a NodeType value")
 			return
 		}
 		if nodeType < 0 || nodeType >= constants.NodeTypesNumber {
-			err = errors.New("value of layout is not a NodeType value")
+			err = errors.New("layout value is not a NodeType value")
 			return
 		}
 		layout = append(layout, types.NodeType(nodeType))

@@ -77,7 +77,7 @@ func TestFetchPuzzleWithWrongScrip(t *testing.T) {
 	}
 	expectedErr := "unable to load lua script"
 	if !strings.Contains(err.Error(), expectedErr) {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedErr, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedErr, err.Error())
 	}
 }
 
@@ -95,7 +95,7 @@ func TestFetchPuzzleWithoutFunction(t *testing.T) {
 	}
 	expectedErr := "error while calling GetTitle function:"
 	if !strings.Contains(err.Error(), expectedErr) {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedErr, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedErr, err.Error())
 	}
 }
 
@@ -113,7 +113,7 @@ func TestFetchPuzzleWithWrongTitle(t *testing.T) {
 	}
 	expectedErr := "title is not a string"
 	if err.Error() != expectedErr {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedErr, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedErr, err.Error())
 	}
 }
 
@@ -131,7 +131,7 @@ func TestFetchPuzzleWithWrongDescriptionType(t *testing.T) {
 	}
 	expectedErr := "description is not an array"
 	if err.Error() != expectedErr {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedErr, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedErr, err.Error())
 	}
 }
 
@@ -149,7 +149,7 @@ func TestFetchPuzzleWithWrongDescriptionLineType(t *testing.T) {
 	}
 	expectedErr := "description line is not a string"
 	if err.Error() != expectedErr {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedErr, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedErr, err.Error())
 	}
 }
 
@@ -167,7 +167,7 @@ func TestFetchPuzzleWithWrongStreamsType(t *testing.T) {
 	}
 	expectedError := "streams is not an array"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -185,7 +185,7 @@ func TestFetchPuzzleWithWrongStreamType(t *testing.T) {
 	}
 	expectedError := "stream is not an array"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -207,7 +207,7 @@ func TestFetchPuzzleWithWrongStreamArugmentsNumber(t *testing.T) {
 	}
 	expectedError := "wrong stream arguments number: expected 4, got 3"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -229,7 +229,7 @@ func TestFetchPuzzleWithWrongStreamTypeValueType(t *testing.T) {
 	}
 	expectedError := "first value of stream is not a StreamType value"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -251,7 +251,7 @@ func TestFetchPuzzleWithWrongStreamTypeValue(t *testing.T) {
 	}
 	expectedError := "first value of stream is not a StreamType value"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -273,7 +273,7 @@ func TestFetchPuzzleWithWrongStreamNameType(t *testing.T) {
 	}
 	expectedError := "second value of stream is not a string"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -295,7 +295,7 @@ func TestFetchPuzzleWithWrongStreamPositionType(t *testing.T) {
 	}
 	expectedError := "third value of stream is not a number"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -320,7 +320,7 @@ func TestFetchPuzzleWithWrongStreamPositionValue(t *testing.T) {
 		constants.IOPositionsNumber-1,
 	)
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -342,7 +342,7 @@ func TestFetchPuzzleWithWrongStreamValuesType(t *testing.T) {
 	}
 	expectedError := "fourth value of stream is not an array"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 }
 
@@ -367,7 +367,7 @@ func TestFetchPuzzleWithWrongStreamValuesLength(t *testing.T) {
 		constants.MaxStreamValuesLength,
 	)
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 	if _, err := FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
@@ -392,7 +392,7 @@ func TestFetchPuzzleWithWrongStreamValuesValueType(t *testing.T) {
 	}
 	expectedError := "stream value is not a number"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 	if _, err := FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
@@ -421,7 +421,7 @@ func TestFetchPuzzleWithWrongStreamValues(t *testing.T) {
 		constants.MaxACC,
 	)
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 	if _, err := FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
@@ -446,7 +446,7 @@ func TestFetchPuzzleWithWrongLayoutType(t *testing.T) {
 	}
 	expectedError := "layout is not an array"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 	if _, err := FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
@@ -471,7 +471,7 @@ func TestFetchPuzzleWithWrongLayoutLength(t *testing.T) {
 	}
 	expectedError := fmt.Sprintf("wrong nodes number: expected %d, got 9", constants.NodesNumber)
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 	if _, err := FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
@@ -496,7 +496,7 @@ func TestFetchPuzzleWithWrongLayoutValueType(t *testing.T) {
 	}
 	expectedError := "layout value is not a NodeType value"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 	if _, err := FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
@@ -521,7 +521,7 @@ func TestFetchPuzzleWithWrongLayoutValues(t *testing.T) {
 	}
 	expectedError := "layout value is not a NodeType value"
 	if err.Error() != expectedError {
-		t.Errorf("wrong error occured. expected: %s, got: %s", expectedError, err.Error())
+		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
 	if _, err := FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")

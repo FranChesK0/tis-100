@@ -1,4 +1,4 @@
-package parser
+package parser_test
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/FranChesK0/tis-100/internal/constants"
+	"github.com/FranChesK0/tis-100/internal/parser"
 	"github.com/FranChesK0/tis-100/internal/types"
 )
 
@@ -20,7 +21,7 @@ func TestFetchPuzzleWithCorrectScript(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	puzzle, err := FetchPuzzle(file.Name())
+	puzzle, err := parser.FetchPuzzle(file.Name())
 	if err != nil {
 		t.Error("unexpected error")
 	}
@@ -71,7 +72,7 @@ func TestFetchPuzzleWithWrongScrip(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -89,7 +90,7 @@ func TestFetchPuzzleWithoutFunction(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -107,7 +108,7 @@ func TestFetchPuzzleWithWrongTitle(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -125,7 +126,7 @@ func TestFetchPuzzleWithWrongDescriptionType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -143,7 +144,7 @@ func TestFetchPuzzleWithWrongDescriptionLineType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -161,7 +162,7 @@ func TestFetchPuzzleWithWrongStreamsType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -179,7 +180,7 @@ func TestFetchPuzzleWithWrongStreamType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -201,7 +202,7 @@ func TestFetchPuzzleWithWrongStreamArugmentsNumber(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -223,7 +224,7 @@ func TestFetchPuzzleWithWrongStreamTypeValueType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -245,7 +246,7 @@ func TestFetchPuzzleWithWrongStreamTypeValue(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -267,7 +268,7 @@ func TestFetchPuzzleWithWrongStreamNameType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -289,7 +290,7 @@ func TestFetchPuzzleWithWrongStreamPositionType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -311,7 +312,7 @@ func TestFetchPuzzleWithWrongStreamPositionValue(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -336,7 +337,7 @@ func TestFetchPuzzleWithWrongStreamValuesType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -358,7 +359,7 @@ func TestFetchPuzzleWithWrongStreamValuesLength(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -369,7 +370,7 @@ func TestFetchPuzzleWithWrongStreamValuesLength(t *testing.T) {
 	if err.Error() != expectedError {
 		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
-	if _, err := FetchPuzzle(file.Name()); err == nil {
+	if _, err := parser.FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
 	}
 }
@@ -386,7 +387,7 @@ func TestFetchPuzzleWithWrongStreamValuesValueType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -394,7 +395,7 @@ func TestFetchPuzzleWithWrongStreamValuesValueType(t *testing.T) {
 	if err.Error() != expectedError {
 		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
-	if _, err := FetchPuzzle(file.Name()); err == nil {
+	if _, err := parser.FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
 	}
 }
@@ -411,7 +412,7 @@ func TestFetchPuzzleWithWrongStreamValues(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -423,7 +424,7 @@ func TestFetchPuzzleWithWrongStreamValues(t *testing.T) {
 	if err.Error() != expectedError {
 		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
-	if _, err := FetchPuzzle(file.Name()); err == nil {
+	if _, err := parser.FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
 	}
 }
@@ -440,7 +441,7 @@ func TestFetchPuzzleWithWrongLayoutType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -448,7 +449,7 @@ func TestFetchPuzzleWithWrongLayoutType(t *testing.T) {
 	if err.Error() != expectedError {
 		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
-	if _, err := FetchPuzzle(file.Name()); err == nil {
+	if _, err := parser.FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
 	}
 }
@@ -465,7 +466,7 @@ func TestFetchPuzzleWithWrongLayoutLength(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -473,7 +474,7 @@ func TestFetchPuzzleWithWrongLayoutLength(t *testing.T) {
 	if err.Error() != expectedError {
 		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
-	if _, err := FetchPuzzle(file.Name()); err == nil {
+	if _, err := parser.FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
 	}
 }
@@ -490,7 +491,7 @@ func TestFetchPuzzleWithWrongLayoutValueType(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -498,7 +499,7 @@ func TestFetchPuzzleWithWrongLayoutValueType(t *testing.T) {
 	if err.Error() != expectedError {
 		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
-	if _, err := FetchPuzzle(file.Name()); err == nil {
+	if _, err := parser.FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
 	}
 }
@@ -515,7 +516,7 @@ func TestFetchPuzzleWithWrongLayoutValues(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = FetchPuzzle(file.Name())
+	_, err = parser.FetchPuzzle(file.Name())
 	if err == nil {
 		t.Error("expected to occure error")
 	}
@@ -523,7 +524,7 @@ func TestFetchPuzzleWithWrongLayoutValues(t *testing.T) {
 	if err.Error() != expectedError {
 		t.Errorf("wrong error occurred. expected: %s, got: %s", expectedError, err.Error())
 	}
-	if _, err := FetchPuzzle(file.Name()); err == nil {
+	if _, err := parser.FetchPuzzle(file.Name()); err == nil {
 		t.Error("expected to occure error")
 	}
 }
@@ -548,7 +549,7 @@ func BenchmarkFetchPuzzle(b *testing.B) {
 		b.Fatal(err)
 	}
 	for range b.N {
-		FetchPuzzle(file.Name())
+		parser.FetchPuzzle(file.Name())
 	}
 }
 

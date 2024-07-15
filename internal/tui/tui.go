@@ -7,7 +7,7 @@ import (
 )
 
 func ProgramRun() error {
-	p := tea.NewProgram(models.NewMainModel())
+	p := tea.NewProgram(models.NewMainModel(), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		return err
 	}

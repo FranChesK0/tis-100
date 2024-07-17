@@ -16,7 +16,7 @@ import (
 
 // FetchPuzzle
 func TestFetchPuzzleWithCorrectScript(t *testing.T) {
-	file, err := Setup(t, *NewScript(), "test_fetch_puzzle_with_correct_script.lua")
+	file, err := SetupLua(t, *NewScript(), "test_fetch_puzzle_with_correct_script.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -67,7 +67,7 @@ func TestFetchPuzzleWithCorrectScript(t *testing.T) {
 func TestFetchPuzzleWithWrongScrip(t *testing.T) {
 	script := NewScript()
 	script.GetTitle = []string{"func GetTitle()", "return", ";"}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_script.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_script.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -85,7 +85,7 @@ func TestFetchPuzzleWithWrongScrip(t *testing.T) {
 func TestFetchPuzzleWithoutFunction(t *testing.T) {
 	script := NewScript()
 	script.GetTitle = []string{""}
-	file, err := Setup(t, *script, "test_fetch_puzzle_without_function.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_without_function.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +103,7 @@ func TestFetchPuzzleWithoutFunction(t *testing.T) {
 func TestFetchPuzzleWithWrongTitle(t *testing.T) {
 	script := NewScript()
 	script.GetTitle = []string{"function GetTitle()", "return {}", "end"}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_title.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_title.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -121,7 +121,7 @@ func TestFetchPuzzleWithWrongTitle(t *testing.T) {
 func TestFetchPuzzleWithWrongDescriptionType(t *testing.T) {
 	script := NewScript()
 	script.GetDescription = []string{"function GetDescription()", "return 1", "end"}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_description_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_description_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -139,7 +139,7 @@ func TestFetchPuzzleWithWrongDescriptionType(t *testing.T) {
 func TestFetchPuzzleWithWrongDescriptionLineType(t *testing.T) {
 	script := NewScript()
 	script.GetDescription = []string{"function GetDescription()", "return { 1, 2 }", "end"}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_description_line_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_description_line_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -157,7 +157,7 @@ func TestFetchPuzzleWithWrongDescriptionLineType(t *testing.T) {
 func TestFetchPuzzleWithWrongStreamsType(t *testing.T) {
 	script := NewScript()
 	script.GetStreams = []string{"function GetStreams()", "return 1", "end"}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_streams_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_streams_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -175,7 +175,7 @@ func TestFetchPuzzleWithWrongStreamsType(t *testing.T) {
 func TestFetchPuzzleWithWrongStreamType(t *testing.T) {
 	script := NewScript()
 	script.GetStreams = []string{"function GetStreams()", "return { 1, 2 }", "end"}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -197,7 +197,7 @@ func TestFetchPuzzleWithWrongStreamArugmentsNumber(t *testing.T) {
 		"return { { 0, \"IN.TEST\", 0 } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_arguments_number.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_arguments_number.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -219,7 +219,7 @@ func TestFetchPuzzleWithWrongStreamTypeValueType(t *testing.T) {
 		"return { { {}, \"IN.TEST\", 0, { 1, 2 } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_type_value_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_type_value_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -241,7 +241,7 @@ func TestFetchPuzzleWithWrongStreamTypeValue(t *testing.T) {
 		"return { { 5, \"IN.TEST\", 0, { 1, 2 } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_type_value.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_type_value.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -263,7 +263,7 @@ func TestFetchPuzzleWithWrongStreamNameType(t *testing.T) {
 		"return { { 0, {}, 0, { 1, 2 } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_name_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_name_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -285,7 +285,7 @@ func TestFetchPuzzleWithWrongStreamPositionType(t *testing.T) {
 		"return { { 0, \"IN.TEST\", \"0\", { 1, 2 } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_position_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_position_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -307,7 +307,7 @@ func TestFetchPuzzleWithWrongStreamPositionValue(t *testing.T) {
 		"return { { 0, \"IN.TEST\", 5, { 1, 2 } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_position_value.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_position_value.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -332,7 +332,7 @@ func TestFetchPuzzleWithWrongStreamValuesType(t *testing.T) {
 		"return { {0, \"IN.TEST\", 0, 0 } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_values_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_values_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -354,7 +354,7 @@ func TestFetchPuzzleWithWrongStreamValuesLength(t *testing.T) {
 		"return { { 0, \"IN.TEST\", 0, { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_values_length.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_values_length.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -382,7 +382,7 @@ func TestFetchPuzzleWithWrongStreamValuesValueType(t *testing.T) {
 		"return { { 0, \"IN.TEST\", 0, { \"1\", \"2\" } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_values_value_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_values_value_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -407,7 +407,7 @@ func TestFetchPuzzleWithWrongStreamValues(t *testing.T) {
 		"return { { 0, \"IN.TEST\", 0, { 500000, 2 } } }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_stream_values.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_stream_values.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -436,7 +436,7 @@ func TestFetchPuzzleWithWrongLayoutType(t *testing.T) {
 		"return 1",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_layout_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_layout_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -461,7 +461,7 @@ func TestFetchPuzzleWithWrongLayoutLength(t *testing.T) {
 		"return { 0, 0, 0, 0, 0, 0, 0, 0, 0 }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_layout_lenght.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_layout_lenght.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -486,7 +486,7 @@ func TestFetchPuzzleWithWrongLayoutValueType(t *testing.T) {
 		"return { \"0\", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_layout_value_type.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_layout_value_type.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -511,7 +511,7 @@ func TestFetchPuzzleWithWrongLayoutValues(t *testing.T) {
 		"return { 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }",
 		"end",
 	}
-	file, err := Setup(t, *script, "test_fetch_puzzle_with_wrong_layout_values.lua")
+	file, err := SetupLua(t, *script, "test_fetch_puzzle_with_wrong_layout_values.lua")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -612,7 +612,7 @@ func (s Script) Get() []string {
 	return append(script, s.GetLayout...)
 }
 
-func Setup(t *testing.T, script Script, fileName string) (*os.File, error) {
+func SetupLua(t *testing.T, script Script, fileName string) (*os.File, error) {
 	file, err := os.CreateTemp("", fileName)
 	if err != nil {
 		return file, nil

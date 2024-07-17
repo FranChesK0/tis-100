@@ -33,8 +33,8 @@ function GetStreams()
 		output[i] = input[i] * 2
 	end
 	return {
-		{ STREAM_INPUT, "IN.A", 0, input },
-		{ STREAM_OUTPUT, "IN.B", 0, output },
+		{ STREAM_INPUT, "IN", 0, input },
+		{ STREAM_OUTPUT, "OUT", 0, output },
 	}
 end
 

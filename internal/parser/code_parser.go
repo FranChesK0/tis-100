@@ -17,7 +17,7 @@ func SaveCode(dirPath string, code *types.ProgramCode) error {
 		return fmt.Errorf("unable to read directory %s: %w", dirPath, err)
 	}
 
-	filePath := filepath.Join(dirPath, fmt.Sprintf("%s.tis", code.Title))
+	filePath := filepath.Join(dirPath, fmt.Sprintf("%s.tis", strings.ToLower(code.Title)))
 
 	file, err := os.Create(filePath)
 	if err != nil {

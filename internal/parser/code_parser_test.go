@@ -117,6 +117,11 @@ func SetupCode(t *testing.T, code *types.ProgramCode, fileName string) (*os.File
 		return file, err
 	}
 
+	t.Cleanup(func() {
+		file.Close()
+		os.Remove(file.Name())
+	})
+
 	return file, nil
 }
 

@@ -90,8 +90,36 @@ func TestFetchCodeWithNotExistingFile(t *testing.T) {
 /* BENCHMARKS */
 
 // SaveCode
+func BenchmarkSaveCode(b *testing.B) {
+	dir, err := os.MkdirTemp("", "bench_dir")
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer os.RemoveAll(dir)
+
+	for i := range b.N {
+		code := newProgramCode(fmt.Sprintf("BENCH-%d", i))
+		filePath, _ := parser.SaveCode(dir, code)
+		os.Remove(filePath)
+	}
+}
 
 // FetchCode
+func BenchmarkFetchCode(b *testing.B) {
+	file, err := os.CreateTemp("", "bench.tis")
+	if err != nil {
+		b.Fatal(err)
+	}
+	code := newProgramCode("BENCH")
+	_, err = fmt.Fprint(file, codeToString(code.NodesCode))
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	for range b.N {
+		parser.FetchCode(file.Name())
+	}
+}
 
 /* UTILS */
 func SetupDir(t *testing.T, dirName string) (string, error) {

@@ -18,3 +18,8 @@ type Puzzle struct {
 	Streams     []Stream
 	Layout      []NodeType
 }
+
+type ProgramCode struct {
+	Title     string
+	NodesCode [][]string
+}

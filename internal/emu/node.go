@@ -257,7 +257,9 @@ func (n *Node) Tick() error {
 		n.ACC *= -1
 	case NOP:
 	case OUT:
-		n.Output.AddValue(n.ACC)
+		if n.Output != nil {
+			n.Output.AddValue(n.ACC)
+		}
 	default:
 		return errors.New("unknown operation")
 	}

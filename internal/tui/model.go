@@ -5,13 +5,17 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/FranChesK0/tis-100/internal/emu"
+	"github.com/FranChesK0/tis-100/internal/types"
 )
 
 type model struct {
-	keys    keyMap
-	help    help.Model
+	keys keyMap
+	help help.Model
+
 	running bool
+
 	program *emu.Program
+	puzzle  *types.Puzzle
 }
 
 func NewModel() *model {

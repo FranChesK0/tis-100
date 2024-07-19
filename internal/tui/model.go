@@ -1,15 +1,31 @@
 package tui
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"github.com/charmbracelet/bubbles/help"
+	tea "github.com/charmbracelet/bubbletea"
 
-type Model struct{}
+	"github.com/FranChesK0/tis-100/internal/emu"
+)
 
-func NewModel() *Model
+type model struct {
+	keys    keyMap
+	help    help.Model
+	running bool
+	program *emu.Program
+}
 
-func (m Model) Init() tea.Cmd {
+func NewModel() *model {
+	return &model{
+		keys:    keys,
+		help:    help.New(),
+		program: emu.NewProgram(),
+	}
+}
+
+func (m model) Init() tea.Cmd {
 	return tea.SetWindowTitle("TIS-100")
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd)
+func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd)
 
-func (m Model) View() string
+func (m model) View() string

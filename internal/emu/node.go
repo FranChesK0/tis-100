@@ -85,7 +85,7 @@ func (n *Node) ParseLine(ic *InputCode, line string) error {
 		"SWP": SWP,
 		"NOP": NOP,
 		"NEG": NEG,
-		"ATA": ATA,
+		"OUT": OUT,
 	}
 	var err error
 	switch strIns {
@@ -97,7 +97,7 @@ func (n *Node) ParseLine(ic *InputCode, line string) error {
 		if err = n.parseOneArg(ic, line, insMap[strIns]); err != nil {
 			return err
 		}
-	case "SAV", "SWP", "NOP", "NEG", "ATA":
+	case "SAV", "SWP", "NOP", "NEG", "OUT":
 		n.CreateInstruction(insMap[strIns])
 	default:
 		return errors.New("invalid instruction")
@@ -256,7 +256,7 @@ func (n *Node) Tick() error {
 	case NEG:
 		n.ACC *= -1
 	case NOP:
-	case ATA:
+	case OUT:
 		n.Output.AddValue(n.ACC)
 	default:
 		return errors.New("unknown operation")

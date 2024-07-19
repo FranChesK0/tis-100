@@ -33,7 +33,7 @@ const (
 	JGZ
 	JLZ
 	JRO
-	ATA
+	OUT
 )
 
 const (

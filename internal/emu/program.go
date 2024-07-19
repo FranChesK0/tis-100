@@ -145,7 +145,7 @@ func (p *Program) createOutputNode(stream types.Stream) *Node {
 	ins.Src.Direction = UP
 	ins.DestType = ADDRESS
 	ins.Dest.Direction = ACC
-	outputNode.CreateInstruction(ATA)
+	outputNode.CreateInstruction(OUT)
 
 	p.Outputs = append(p.Outputs, NewOutput(stream.Position))
 	outputNode.Output = p.Outputs[len(p.Outputs)-1]

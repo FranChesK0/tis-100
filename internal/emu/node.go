@@ -19,6 +19,7 @@ type Node struct {
 	Last           *Node
 	OutputValue    int16
 	Ports          [4]*Node
+	Output         *Output
 }
 
 type ReadResult struct {
@@ -256,7 +257,7 @@ func (n *Node) Tick() error {
 		n.ACC *= -1
 	case NOP:
 	case ATA:
-		// TODO: process the output values
+		n.Output.AddValue(n.ACC)
 	default:
 		return errors.New("unknown operation")
 	}

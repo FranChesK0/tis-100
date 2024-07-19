@@ -12,6 +12,7 @@ type Program struct {
 	Nodes       []*Node
 	NodeList    *NodeList
 	ActiveNodes *NodeList
+	Outputs     []*Output
 }
 
 func NewProgram() *Program {
@@ -23,7 +24,8 @@ func NewProgram() *Program {
 		nodes = append(nodes, n)
 	}
 	p := &Program{
-		Nodes: nodes,
+		Nodes:   nodes,
+		Outputs: make([]*Output, 0),
 	}
 
 	for i := range p.Nodes {
@@ -145,7 +147,8 @@ func (p *Program) createOutputNode(stream types.Stream) *Node {
 	ins.Dest.Direction = ACC
 	outputNode.CreateInstruction(ATA)
 
-	// TODO: implement output to display
+	p.Outputs = append(p.Outputs, NewOutput(stream.Position))
+	outputNode.Output = p.Outputs[len(p.Outputs)-1]
 
 	return outputNode
 }

@@ -3,13 +3,14 @@ package tui
 import "github.com/charmbracelet/bubbles/key"
 
 type keyMap struct {
-	Open key.Binding
-	Save key.Binding
-	Next key.Binding
-	Prev key.Binding
-	Run  key.Binding
-	Help key.Binding
-	Quit key.Binding
+	Open    key.Binding
+	Save    key.Binding
+	Next    key.Binding
+	Prev    key.Binding
+	Run     key.Binding
+	Restart key.Binding
+	Help    key.Binding
+	Quit    key.Binding
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
@@ -18,7 +19,7 @@ func (k keyMap) ShortHelp() []key.Binding {
 
 func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Open, k.Save},
+		{k.Open, k.Save, k.Restart},
 		{k.Next, k.Prev, k.Run},
 		{k.Help, k.Quit},
 	}
@@ -44,6 +45,10 @@ var keys = keyMap{
 	Run: key.NewBinding(
 		key.WithKeys("ctrl+r"),
 		key.WithHelp("ctrl+r", "run program"),
+	),
+	Restart: key.NewBinding(
+		key.WithKeys("ctrl+n"),
+		key.WithHelp("ctrl+n", "restart program"),
 	),
 	Help: key.NewBinding(
 		key.WithKeys("?"),

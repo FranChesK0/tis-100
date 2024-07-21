@@ -32,7 +32,7 @@ func NewModel() (*model, error) {
 
 	fp := filepicker.New()
 	fp.AllowedTypes = []string{".lua"}
-	fp.CurrentDirectory, err = os.UserHomeDir()
+	fp.CurrentDirectory, err = os.Getwd()
 	if err != nil {
 		return &model{}, nil
 	}

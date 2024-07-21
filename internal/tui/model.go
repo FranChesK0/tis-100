@@ -13,14 +13,18 @@ import (
 )
 
 type model struct {
-	keys          keyMap
-	help          help.Model
-	filepicker    filepicker.Model
-	filepickerErr error
-	puzzlePath    string
-	running       bool
-	program       *emu.Program
-	puzzle        *types.Puzzle
+	filepicker filepicker.Model
+	help       help.Model
+
+	puzzle  *types.Puzzle
+	program *emu.Program
+
+	keys       keyMap
+	puzzlePath string
+	running    bool
+
+	filepickerErr  error
+	fetchPuzzleErr error
 }
 
 func NewModel() (*model, error) {
@@ -55,9 +59,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	if m.puzzlePath == "" {
 		return m.updateFilepicker(msg)
-	}
-	if m.puzzle == nil {
-		m.puzzle, _ = parser.FetchPuzzle(m.puzzlePath) // TODO: add checks for errors
+	} else if m.puzzle == nil {
+		m.puzzle, m.fetchPuzzleErr = parser.FetchPuzzle(m.puzzlePath)
 	}
 
 	return m, nil
@@ -66,9 +69,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	if m.puzzlePath == "" {
 		return m.viewFilepicker()
-	}
-	if m.puzzle == nil {
+	} else if m.puzzle == nil {
 		return "Loading puzzle..."
+	} else if m.fetchPuzzleErr != nil {
+		return "Error while fetching puzzle: " + m.fetchPuzzleErr.Error()
+	} else {
+		return "Puzzle title: " + m.puzzle.Title
 	}
-	return "Puzzle title: " + m.puzzle.Title
 }
